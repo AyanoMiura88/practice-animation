@@ -7,7 +7,7 @@ import swap from "lodash-move";
 
 // drag And Drop------------------------------------------
 const ReactSpringDnD = ({ items }: { items: string[] }) => {
-  const fn =
+  const getProps =
     (order: number[], active = false, originalIndex = 0, curIndex = 0, y = 0) =>
     (index: number) =>
       active && index === originalIndex
@@ -30,16 +30,15 @@ const ReactSpringDnD = ({ items }: { items: string[] }) => {
   // インディケーションをローカルリファレンスとして保存
   const order = useRef(items.map((_, index) => index));
   // スプリングを作成し、それぞれがアイテムに対応し、その変形やスケールなどを制御
-  const [springs, api] = useSprings(items.length, fn(order.current));
+  const [springs, api] = useSprings(items.length, getProps(order.current));
   const bind = useDrag(({ args: [originalIndex], active, movement: [, y] }) => {
     const curIndex = order.current.indexOf(originalIndex);
     const curRow = clamp(Math.round((curIndex * 100 + y) / 100), 0, items.length - 1);
     const newOrder = swap(order.current, curIndex, curRow);
     // 新しいスタイルデータをスプリングに供給すると、レンダリングを一度も行わずにビューをアニメーション化
-    api.start(fn(newOrder, active, originalIndex, curIndex, y));
+    api.start(getProps(newOrder, active, originalIndex, curIndex, y));
     if (!active) order.current = newOrder;
   });
-  // };
 
   return (
     <div className={springStyles.content4} style={{ height: items.length * 100 }}>
