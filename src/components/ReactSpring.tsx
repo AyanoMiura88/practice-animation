@@ -4,6 +4,9 @@ import SpringData from "../animeData/SpringData";
 import springStyles from "./ReactSpring.module.css";
 import useMeasure from "react-use-measure";
 
+import ReactSpringDnD from "./ReactSpring-DnD";
+
+// wave text
 const AnimFeTurbulence = animated("feTurbulence");
 const AnimFeDisplacementMap = animated("feDisplacementMap");
 
@@ -117,6 +120,10 @@ const ReactSpring = () => {
             />
           </g>
         </animated.svg>
+      </div>
+      <div>drag and drop</div>
+      <div className={springStyles.container3}>
+        <ReactSpringDnD items={"Lorem ipsum dolor sit".split(" ")} />
       </div>
     </>
   );
