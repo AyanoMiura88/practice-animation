@@ -110,3 +110,20 @@
 .content4 > div:nth-child(4) {
   background: linear-gradient(135deg, #c3cfe2 0%, #c3cfe2 100%);
 }
+
+.container5 > div {
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: 800;
+  font-size: 25em;
+  will-change: transform, opacity;
+  text-shadow: 0px 2px 40px #00000020, 0px 2px 5px #00000030;
+  -webkit-user-select: none;
+  user-select: none;
+}

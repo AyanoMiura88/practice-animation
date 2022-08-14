@@ -1,5 +1,13 @@
-import { useState } from "react";
-import { useSpring, animated, useTransition, useChain, config, useSpringRef } from "react-spring";
+import { useState, useEffect, useCallback, CSSProperties } from "react";
+import {
+  useSpring,
+  animated,
+  useTransition,
+  useChain,
+  config,
+  useSpringRef,
+  AnimatedProps,
+} from "react-spring";
 import SpringData from "../animeData/SpringData";
 import springStyles from "./ReactSpring.module.css";
 import useMeasure from "react-use-measure";
@@ -10,6 +18,19 @@ import ReactSpringDnD from "./ReactSpring-DnD";
 const AnimFeTurbulence = animated("feTurbulence");
 const AnimFeDisplacementMap = animated("feDisplacementMap");
 
+// transition object
+const pages: ((props: AnimatedProps<{ transitionStyle: CSSProperties }>) => React.ReactElement)[] =
+  [
+    ({ transitionStyle: style }) => (
+      <animated.div style={{ ...style, background: "lightpink" }}>A</animated.div>
+    ),
+    ({ transitionStyle: style }) => (
+      <animated.div style={{ ...style, background: "lightblue" }}>B</animated.div>
+    ),
+    ({ transitionStyle: style }) => (
+      <animated.div style={{ ...style, background: "lightgreen" }}>C</animated.div>
+    ),
+  ];
 const ReactSpring = () => {
   // text--------------------------------------------
   const textStyle = useSpring({
@@ -57,6 +78,21 @@ const ReactSpring = () => {
     to: { factor: 150, opacity: 1, scale: 1, freq: "0.0, 0.0" },
     config: { duration: 3000 },
   }));
+
+  // transition object-------------------------------------
+  const [index, setIndex] = useState(0);
+  const onClick = useCallback(() => setIndex((state) => (state + 1) % 3), []);
+  const transRef = useSpringRef();
+  const transitions = useTransition(index, {
+    ref: transRef,
+    keys: null,
+    from: { opacity: 0, transform: "translate3d(100%,0,0)" },
+    enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
+    leave: { opacity: 0, transform: "translate3d(-50%,0,0)" },
+  });
+  useEffect(() => {
+    transRef.start();
+  }, [index]);
 
   return (
     <>
@@ -124,6 +160,13 @@ const ReactSpring = () => {
       <div>drag and drop</div>
       <div className={springStyles.container3}>
         <ReactSpringDnD items={"Lorem ipsum dolor sit".split(" ")} />
+      </div>
+      <div>transition object</div>
+      <div className={`flex fill ${springStyles.container5}`} onClick={onClick}>
+        {transitions((style, i) => {
+          const Page = pages[i];
+          return <Page transitionStyle={style} />;
+        })}
       </div>
     </>
   );
