@@ -177,18 +177,18 @@ const ReactSpring = () => {
       </div>
       <div>transition object</div>
       <div className={`flex fill ${springStyles.container5}`}>
-        <ul>
-          <li className={springStyles.sideButton} onClick={() => transitionOnClick("right")}>
-            right
-          </li>
-          <li className={springStyles.sideButton} onClick={() => transitionOnClick("left")}>
-            left
-          </li>
-        </ul>
         {transitions((style, i) => {
           const Page = pages[i];
           return <Page transitionStyle={style} />;
         })}
+        <ul>
+          <li className={springStyles.sideButtonRight} onClick={() => transitionOnClick("right")}>
+            ◀
+          </li>
+          <li className={springStyles.sideButtonLeft} onClick={() => transitionOnClick("left")}>
+            ▶
+          </li>
+        </ul>
       </div>
     </>
   );

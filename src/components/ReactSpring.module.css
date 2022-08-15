@@ -128,7 +128,25 @@
   user-select: none;
 }
 
-.sideButton {
-  background-color: rgba(253, 253, 253, 0.5);
+.sideButtonRight{
+  position: relative;
+  top: 15rem;
   list-style-type: none;
+  background-color: rgba(37, 114, 202, 0.5);
+  color: white;
+  display: inline-block;
+  padding: 20px;
+  border-radius: 50%;
+}
+
+.sideButtonLeft{
+  position: relative;
+  top: 15rem;
+  left: 39rem;
+  list-style-type: none;
+  background-color: rgba(37, 114, 202, 0.5);
+  color: white;
+  display: inline-block;
+  padding: 20px;
+  border-radius: 50%;
 }
