@@ -19,6 +19,7 @@ const AnimFeTurbulence = animated("feTurbulence");
 const AnimFeDisplacementMap = animated("feDisplacementMap");
 
 // transition object
+type DirectionType = "right" | "left";
 const pages: ((props: AnimatedProps<{ transitionStyle: CSSProperties }>) => React.ReactElement)[] =
   [
     ({ transitionStyle: style }) => (
@@ -29,6 +30,9 @@ const pages: ((props: AnimatedProps<{ transitionStyle: CSSProperties }>) => Reac
     ),
     ({ transitionStyle: style }) => (
       <animated.div style={{ ...style, background: "lightgreen" }}>C</animated.div>
+    ),
+    ({ transitionStyle: style }) => (
+      <animated.div style={{ ...style, background: "lightyellow" }}>D</animated.div>
     ),
   ];
 const ReactSpring = () => {
@@ -79,16 +83,26 @@ const ReactSpring = () => {
     config: { duration: 3000 },
   }));
 
-  // transition object-------------------------------------
+  // transition object------------------------------------- ＋逆回転
   const [index, setIndex] = useState(0);
-  const onClick = useCallback(() => setIndex((state) => (state + 1) % 3), []);
+  const [direction, setDirection] = useState<DirectionType>("right");
+  const transitionOnClick = useCallback((type: DirectionType) => {
+    setDirection(type);
+    setIndex((state) => (type === "right" ? (state + 1) % 4 : !state ? (state = 3) : state - 1));
+  }, []);
   const transRef = useSpringRef();
   const transitions = useTransition(index, {
     ref: transRef,
     keys: null,
-    from: { opacity: 0, transform: "translate3d(100%,0,0)" },
+    from: {
+      opacity: 0,
+      transform: direction === "right" ? "translate3d(100%,0,0)" : "translate3d(-50%,0,0)",
+    },
     enter: { opacity: 1, transform: "translate3d(0%,0,0)" },
-    leave: { opacity: 0, transform: "translate3d(-50%,0,0)" },
+    leave: {
+      opacity: 0,
+      transform: direction === "right" ? "translate3d(-50%,0,0)" : "translate3d(100%,0,0)",
+    },
   });
   useEffect(() => {
     transRef.start();
@@ -162,7 +176,15 @@ const ReactSpring = () => {
         <ReactSpringDnD items={"Lorem ipsum dolor sit".split(" ")} />
       </div>
       <div>transition object</div>
-      <div className={`flex fill ${springStyles.container5}`} onClick={onClick}>
+      <div className={`flex fill ${springStyles.container5}`}>
+        <ul>
+          <li className={springStyles.sideButton} onClick={() => transitionOnClick("right")}>
+            right
+          </li>
+          <li className={springStyles.sideButton} onClick={() => transitionOnClick("left")}>
+            left
+          </li>
+        </ul>
         {transitions((style, i) => {
           const Page = pages[i];
           return <Page transitionStyle={style} />;
